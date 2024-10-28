@@ -26,10 +26,29 @@ namespace Tetris
             _board = board;
             _boardHalfWidth = _board.Width / 2;
             _boardHalfHeight = _board.Height / 2;
+            _board.OnBoardChanged += BoardChanged;
             
             DrawBoard();
         }
-        
+
+        private void BoardChanged()
+        {
+            if(_blockMap is null || _board is null) return;
+            
+            _blockMap.ClearAllTiles();
+            for(int y = 0; y < _board.Height; y++)
+            {
+                for(int x = 0; x < _board.Width; x++)
+                {
+                    if(_board.Grid[x, y] != 0)
+                    {
+                        _blockMap.SetTile(new Vector3Int(x, y), _blockTile);
+                        _blockMap.SetColor(new Vector3Int(x, y), BlockData.GetColor(_board.Grid[x, y]));
+                    }
+                }
+            }
+        }
+
         private void DrawBoard()
         {
             if(_backgroundMap is null || _board is null) return;
