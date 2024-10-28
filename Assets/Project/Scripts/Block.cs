@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Tetris
@@ -6,30 +7,44 @@ namespace Tetris
     public sealed class Block
     {
         public Vector2Int Position { get; private set; }
-        public readonly BlockData BlockData;
+        public int ID => _blockData.ID;
         
+        private readonly BlockData _blockData;
         private int _rotationState = 0;
 
-        public Block(BlockData blockData, int rotationState = 0)
+        public Block(BlockData blockData, Vector2Int position, int rotationState = 0)
         {
-            BlockData = blockData;
-            Position = BlockData.StartOffset;
+            _blockData = blockData;
+            Position = _blockData.StartOffset + position;
             _rotationState = rotationState;
         }
 
-        public Vector2Int[] GetTilePositions()
+        public void Move(Vector2Int direction)
         {
-            Vector2Int[][] tilePositions = BlockData.TilePositions;
+            Position += direction;
+        }
+
+        public void Rotate(int direction)
+        {
+            int rotationStates = _blockData.TilePositions!.Length;
             
+            _rotationState += direction;
+            if(_rotationState < 0) _rotationState = rotationStates - 1;
+            else if(_rotationState >= rotationStates) _rotationState = 0;
+        }
+        
+        [NotNull] public Vector2Int[] GetTilePositions()
+        {
+            Vector2Int[][] tilePositions = _blockData.TilePositions;
             Vector2Int[] currentTilePositions = tilePositions?[_rotationState];
-            if(currentTilePositions is null) return null;
-            
-            for(int i = 0; i < currentTilePositions.Length; i++)
+            Vector2Int[] result = new Vector2Int[currentTilePositions!.Length];
+
+            for(int i = 0; i < currentTilePositions!.Length; i++)
             {
-                currentTilePositions[i] += Position;
+                result[i] = Position + currentTilePositions[i];
             }
 
-            return currentTilePositions;
+            return result;
         }
     }
     
@@ -50,16 +65,14 @@ namespace Tetris
                 5 => Color.yellow,
                 6 => Color.green,
                 7 => new Color(0.5f, 0f, 1f, 1f),
-                _ => Color.black
+                _ => new Color(0f, 0f, 0f, 0f)
             };
         }
         
-        public static BlockData[] LoadBlockData(string json)
+        [NotNull] public static BlockData[] LoadBlockData(string json)
         {
             SerializedBlockDataArray serializableBlockDataArray = JsonUtility.FromJson<SerializedBlockDataArray>(json);
             
-            if (serializableBlockDataArray.Array is null) return null;
-
             SerializableBlockData[] serializableBlockData = serializableBlockDataArray.Array;
             BlockData[] blockData = new BlockData[serializableBlockData.Length];
 

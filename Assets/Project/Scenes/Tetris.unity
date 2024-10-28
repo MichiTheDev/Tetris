@@ -302,7 +302,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _boardWidth: 12
   _boardHeight: 20
-  _blockDataJson: {fileID: 4900000, guid: 6ce8671b8a67ba04086f47fab51cb5ba, type: 3}
+  _tickRate: 4
 --- !u!1 &846608137
 GameObject:
   m_ObjectHideFlags: 0

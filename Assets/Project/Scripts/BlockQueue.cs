@@ -1,38 +1,45 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
 
 namespace Tetris
 {
     public sealed class BlockQueue
     {
-        public Block NextBlock { get; private set; }
+        [NotNull] public Block NextBlock { get; private set; } = null!;
 
-        private readonly BlockData[] _blockDataArray;
+        [NotNull] private readonly BlockData[] _blockDataArray = null!;
+
+        private readonly Vector2Int _spawnPosition;
         
-        public BlockQueue(string json)
+        public BlockQueue(Vector2Int spawnPosition)
         {
-            _blockDataArray = BlockData.LoadBlockData(json);
+            TextAsset json = Resources.Load<TextAsset>("BlockData");
+            if(json is null)
+            {
+                Debug.Log("Json file for BlockData couldn't be loaded.");
+                return;
+            }
+
+            _spawnPosition = spawnPosition;
+            _blockDataArray = BlockData.LoadBlockData(json.text);
             NextBlock = GetRandomBlock();
         }
 
-        public Block GetNextBlock()
+        [NotNull] public Block GetNextBlock()
         {
-            if(NextBlock is null) return null;
-            
-            Block nextBlock = NextBlock;
+            Block block = NextBlock;
 
             do NextBlock = GetRandomBlock();
-            while(nextBlock.BlockData.ID != NextBlock!.BlockData.ID);
+            while(block.ID == NextBlock!.ID);
             
-            return nextBlock;
+            return block;
         }
 
-        private Block GetRandomBlock()
+        [NotNull] private Block GetRandomBlock()
         {
-            if(_blockDataArray is null) return null;
-            
             int randomIndex = Random.Range(0, _blockDataArray.Length);
             BlockData blockData = _blockDataArray[randomIndex];
-            return new Block(blockData, Random.Range(0, blockData.TilePositions.Length));
+            return new Block(blockData, _spawnPosition, Random.Range(0, blockData.TilePositions.Length));
         }
     }
 }

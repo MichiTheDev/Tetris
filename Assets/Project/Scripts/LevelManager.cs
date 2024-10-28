@@ -1,4 +1,6 @@
-﻿using TwodeUtils;
+﻿using System;
+using JetBrains.Annotations;
+using TwodeUtils;
 using UnityEngine;
 
 namespace Tetris
@@ -9,23 +11,33 @@ namespace Tetris
         [SerializeField] private int _boardWidth = 10;
         [SerializeField] private int _boardHeight = 18;
 
-        [Header("Block Data")]
-        [SerializeField] private TextAsset _blockDataJson;
-
-        private Board _board;
-        private BlockQueue _blockQueue;
+        [Header("Game Settings")]
+        [SerializeField] private int _tickRate = 4;
+        
+        [NotNull] private Board _board = null!;
+        private float _tickRateTimer;
+        private float _tickRateTime;
 
         protected override void Awake()
         {
             base.Awake();
             _board = new Board(_boardWidth, _boardHeight);
-            _blockQueue = new BlockQueue(_blockDataJson!.text);
+            _tickRateTime = 1f / _tickRate;
         }
 
         private void Start()
         {
             BoardVisualizer.Instance?.SetBoard(_board);
-            _board.SetCurrentBlock(_blockQueue.GetNextBlock());
+        }
+
+        private void Update()
+        {
+            _tickRateTimer += Time.deltaTime;
+            if(_tickRateTimer >= _tickRateTime)
+            {
+                _tickRateTimer = 0f;
+                _board.Tick();
+            }
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using TwodeUtils;
+﻿using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
+using TwodeUtils;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -7,15 +10,15 @@ namespace Tetris
     public sealed class BoardVisualizer : Singleton<BoardVisualizer>
     {
         [Header("Tilemaps")] 
-        [SerializeField] private Tilemap _backgroundMap;
-        [SerializeField] private Tilemap _blockMap;
+        [SerializeField, NotNull] private Tilemap _backgroundMap = null!;
+        [SerializeField, NotNull] private Tilemap _blockMap = null!;
         
         [Header("Tile Assets")]
         [SerializeField] private Tile _borderTile;
         [SerializeField] private Tile _gridTile;
         [SerializeField] private Tile _blockTile;
 
-        private Board _board;
+        [NotNull] private Board _board = null!;
         private int _boardHalfWidth;
         private int _boardHalfHeight;
         
@@ -31,34 +34,25 @@ namespace Tetris
             DrawBoard();
         }
 
-        private void BoardChanged()
+        private void BoardChanged([NotNull] Dictionary<Vector2Int, int> changedTiles)
         {
-            if(_blockMap is null || _board is null) return;
-            
-            _blockMap.ClearAllTiles();
-            for(int y = 0; y < _board.Height; y++)
+            foreach(KeyValuePair<Vector2Int, int> changedTile in changedTiles)
             {
-                for(int x = 0; x < _board.Width; x++)
-                {
-                    if(_board.Grid[x, y] != 0)
-                    {
-                        _blockMap.SetTile(new Vector3Int(x, y), _blockTile);
-                        _blockMap.SetColor(new Vector3Int(x, y), BlockData.GetColor(_board.Grid[x, y]));
-                    }
-                }
+                Vector2Int changedTilePosition = changedTile.Key;
+                Vector3Int tilemapPosition = ConvertToTilemapPosition(changedTilePosition.x, changedTilePosition.y);
+                _blockMap.SetTile(tilemapPosition, _blockTile);
+                _blockMap.SetColor(tilemapPosition, BlockData.GetColor(changedTile.Value));
             }
         }
 
         private void DrawBoard()
         {
-            if(_backgroundMap is null || _board is null) return;
-            
             _backgroundMap.ClearAllTiles();
-            for(int y = 0; y < _board.Height; y++)
+            for(int y = -1; y <= _board.Height; y++)
             {
-                for(int x = 0; x < _board!.Width; x++)
+                for(int x = -1; x <= _board!.Width; x++)
                 {
-                    if(y == 0 || y == _board.Height - 1 || x == 0 || x == _board.Width - 1)
+                    if(y == -1 || y == _board.Height || x == -1 || x == _board.Width)
                     {
                         _backgroundMap!.SetTile(ConvertToTilemapPosition(x, y), _borderTile);
                         continue;
@@ -74,4 +68,4 @@ namespace Tetris
             return new Vector3Int(x - _boardHalfWidth, y - _boardHalfHeight);
         }
     }
-}
+}   
