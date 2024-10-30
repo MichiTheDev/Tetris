@@ -90,6 +90,17 @@ namespace Tetris
                     ""isPartOfComposite"": false
                 },
                 {
+                    ""name"": """",
+                    ""id"": ""8f7e14d2-5a5c-40bc-ab43-658b3f362df2"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SlowDrop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
                     ""name"": ""Keyboard (Default)"",
                     ""id"": ""876b427a-336b-472d-a0f3-53518ec710f1"",
                     ""path"": ""1DAxis"",
@@ -123,6 +134,39 @@ namespace Tetris
                     ""isPartOfComposite"": true
                 },
                 {
+                    ""name"": ""Keyboard (Arrows)"",
+                    ""id"": ""eae41e68-c992-4e65-b75d-e40d2797ac50"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""ecb789e6-06c3-4265-ab67-194afd2c1053"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""177e1231-c43d-4a58-aa77-098ef1ab4d0c"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": ""Keyboard (Default)"",
                     ""id"": ""4e19430c-8914-4d97-893f-e4f4341e4113"",
                     ""path"": ""1DAxis"",
@@ -148,39 +192,6 @@ namespace Tetris
                     ""name"": ""positive"",
                     ""id"": ""50351b5c-0f07-4783-9a62-16abcecd2196"",
                     ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""Keyboard (Arrows)"",
-                    ""id"": ""dc98e56a-940d-478d-a828-9d23d27671ed"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""52b6eccc-4242-42ae-afe5-7f6c057b170e"",
-                    ""path"": ""<Keyboard>/leftArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""68e116fd-b7a9-4db2-9d47-c9238937345d"",
-                    ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

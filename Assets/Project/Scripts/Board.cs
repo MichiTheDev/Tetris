@@ -26,7 +26,7 @@ namespace Tetris
             _blockQueue = new BlockQueue(new Vector2Int(Width / 2, Height));
             _grid = new int[width, height];
 
-            _currentBlock = _blockQueue.GetNextBlock()!;
+            SetNewBlock(_blockQueue.GetNextBlock()!);
         }
 
         public void Tick()
@@ -61,10 +61,25 @@ namespace Tetris
         {
             ClearTiles(_currentBlock.GetTilePositions());
             _currentBlock.Rotate(direction);
+            Vector2Int[] newTilePositions = _currentBlock.GetTilePositions();
+
+            if(!InBounds(newTilePositions) || HasCollision(newTilePositions))
+            {
+                _currentBlock.Rotate(-direction);
+                return;
+            }
+            
             SetTiles(_currentBlock.GetTilePositions(), _currentBlock.ID);
             BroadcastBoardChange();
         }
 
+        private void SetNewBlock([NotNull] Block block)
+        {
+            _currentBlock = block;
+            UpdateChangedTiles(_currentBlock.GetTilePositions(), _currentBlock.ID);
+            BroadcastBoardChange();
+        }
+        
         private void ClearTiles([NotNull] Vector2Int[] tilePositions)
         {
             foreach(Vector2Int position in tilePositions)
@@ -94,7 +109,7 @@ namespace Tetris
             
             UpdateChangedTiles(tilePositions, _currentBlock.ID);
             CheckForFullRows();
-            _currentBlock = _blockQueue.GetNextBlock();
+            SetNewBlock(_blockQueue.GetNextBlock());
         }
 
         private bool IsRowEmpty(int row)
@@ -183,7 +198,7 @@ namespace Tetris
                 MoveRowDown(y, cleared);
             }
         }
-
+        
         private void BroadcastBoardChange()
         {
             OnBoardChanged?.Invoke(changedTiles);
