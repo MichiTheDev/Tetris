@@ -43,13 +43,17 @@ namespace Tetris
             if(!InBounds(newTilePositions) || HasCollision(newTilePositions))
             {
                 _currentBlock.Move(-direction);
-                PlaceBlock();
-            }
-            else
-            {
-                SetTiles(newTilePositions, _currentBlock.ID);
+                newTilePositions = _currentBlock.GetTilePositions();
+
+                // Only place block when hitting the ground
+                if(direction.y != 0)
+                {
+                    PlaceBlock();
+                    return;
+                }
             }
             
+            SetTiles(newTilePositions, _currentBlock.ID);
             BroadcastBoardChange();
         }
 
@@ -143,7 +147,7 @@ namespace Tetris
 
                 movedTilePositions[x] = new Vector2Int(x, row);
                 
-                UpdateChangedTiles(new[]{ new Vector2Int(x,newRow) }, _grid[x, row]);
+                UpdateChangedTiles(new[]{ new Vector2Int(x,newRow) }, _grid[x, newRow]);
             }
             
             UpdateChangedTiles(movedTilePositions, 0);
